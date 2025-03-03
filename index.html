@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa de Sitios de Visita</title>
+    <title>Map of Visit Sites</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <style>
@@ -14,19 +14,19 @@
     </style>
 </head>
 <body>
-    <h2>Mapa de Sitios de Visita</h2>
+    <h2>Map of Visit Sites</h2>
     <div id="map"></div>
     
     <script>
-        function calcularDistancia(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radio de la Tierra en km
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth radius in km
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLon = (lon2 - lon1) * Math.PI / 180;
             const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
                       Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
                       Math.sin(dLon / 2) * Math.sin(dLon / 2);
             const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return (R * c).toFixed(2); // Distancia en km
+            return (R * c).toFixed(2); // Distance in km
         }
 
         var map = L.map('map').setView([-33.0, -71.0], 6);
@@ -38,19 +38,18 @@
         var santiago = { lat: -33.4489, lon: -70.6693 };
 
         var locations = [
-            { name: "Isla Chañaral", lat: -29.0236, lon: -71.5664 },
-            { name: "Isla Cachagua", lat: -32.5700, lon: -71.4633 },
-            { name: "Puerto Varas", lat: -41.3175, lon: -72.9850 },
-            { name: "Archipiélago de Juan Fernández", lat: -33.6300, lon: -78.8300 }
+            { name: "Isla Chañaral", lat: -29.0236, lon: -71.5664, description: "Island eradicated of rabbits, one-day visit, travel in the morning and stay overnight in Coquimbo depending on weather. Visit the most iconic eradication site of IC, penguin watching, and possible sightings of marine mammals such as whales and dolphins." },
+            { name: "Isla Cachagua", lat: -32.5700, lon: -71.4633, description: "Island very close to the coast, still in the eradication process for 2025, delayed due to El Niño impact and avian influenza. One-day visit, accommodation in Santiago, morning visit and return in the afternoon. Humboldt penguin watching and community visits." },
+            { name: "Puerto Varas", lat: -41.3175, lon: -72.9850, description: "Multiple visits to tourist sites and project prospects in the area, meeting with part of the Chile team." },
+            { name: "Juan Fernández Archipelago", lat: -33.6300, lon: -78.8300, description: "At least a 4-day trip, multiple projects, 2-hour flight by small plane." }
         ];
 
         locations.forEach(location => {
-            var distancia = calcularDistancia(santiago.lat, santiago.lon, location.lat, location.lon);
+            var distance = calculateDistance(santiago.lat, santiago.lon, location.lat, location.lon);
             var marker = L.marker([location.lat, location.lon]).addTo(map);
-            var whatsappLink = `https://wa.me/?text=Ubicación: ${location.name} - https://www.google.com/maps?q=${location.lat},${location.lon}`;
-            marker.bindPopup(`<b>${location.name}</b><br>Distancia desde Santiago: ${distancia} km<br><a href='${whatsappLink}' target='_blank'>Compartir en WhatsApp</a>`);
+            var whatsappLink = `https://wa.me/?text=Location: ${location.name} - https://www.google.com/maps?q=${location.lat},${location.lon}`;
+            marker.bindPopup(`<b>${location.name}</b><br>Distance from Santiago: ${distance} km<br>${location.description}<br><a href='${whatsappLink}' target='_blank'>Share on WhatsApp</a>`);
         });
     </script>
 </body>
 </html>
-             
