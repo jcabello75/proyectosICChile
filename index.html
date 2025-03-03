@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Proyectos de Island Conservation en Chile</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+    <style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <h2 style="text-align: center;">Mapa de Proyectos de Island Conservation en Chile</h2>
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            // Coordenadas de Santiago de Chile (punto de referencia)
+            var santiago = { lat: -33.4489, lng: -70.6693 };
+
+            // Ubicaciones de los proyectos de Island Conservation
+            var locations = [
+                { name: "Isla Chañaral", lat: -29.0275, lng: -71.5269 },
+                { name: "Isla Cachagua", lat: -32.5777, lng: -71.4502 },
+                { name: "Puerto Varas", lat: -41.3175, lng: -72.9854 },
+                { name: "Isla Pájaros Uno", lat: -32.9995, lng: -71.5430 },
+                { name: "Isla Robinson Crusoe", lat: -33.6358, lng: -78.8295 }
+            ];
+
+            // Inicializar el mapa
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 5,
+                center: santiago
+            });
+
+            // Agregar marcador en Santiago
+            var markerSantiago = new google.maps.Marker({
+                position: santiago,
+                map: map,
+                title: "Santiago de Chile",
+                icon: "http://maps.google.com/mapfiles/ms/icons/red-dot.png"
+            });
+
+            // Servicio de direcciones para calcular rutas
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderers = [];
+
+            // Iterar sobre las ubicaciones y agregar marcadores y rutas
+            locations.forEach(function (location, index) {
+                var marker = new google.maps.Marker({
+                    position: { lat: location.lat, lng: location.lng },
+                    map: map,
+                    title: location.name,
+                    icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                });
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: "<h3><b>" + location.name + "</b></h3>"
+                });
+
+                marker.addListener("click", function () {
+                    infoWindow.open(map, marker);
+                });
+
+                // Crear ruta desde Santiago hasta la ubicación
+                var directionsRenderer = new google.maps.DirectionsRenderer({
+                    map: map,
+                    polylineOptions: {
+                        strokeColor: "blue",
+                        strokeOpacity: 0.6,
+                        strokeWeight: 5
+                    },
+                    suppressMarkers: true
+                });
+
+                directionsRenderers.push(directionsRenderer);
+
+                directionsService.route(
+                    {
+                        origin: santiago,
+                        destination: { lat: location.lat, lng: location.lng },
+                        travelMode: google.maps.TravelMode.DRIVING
+                    },
+                    function (response, status) {
+                        if (status === "OK") {
+                            directionsRenderer.setDirections(response);
+                        } else {
+                            console.error("No se pudo calcular la ruta a " + location.name + ": " + status);
+                        }
+                    }
+                );
+            });
+        }
+    </script>
+
+</body>
+</html>
