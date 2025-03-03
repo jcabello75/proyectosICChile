@@ -11,6 +11,9 @@
             height: 500px;
             width: 100%;
         }
+        .popup-content {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -48,8 +51,23 @@
             var distance = calculateDistance(santiago.lat, santiago.lon, location.lat, location.lon);
             var marker = L.marker([location.lat, location.lon]).addTo(map);
             var whatsappLink = `https://wa.me/?text=Location: ${location.name} - https://www.google.com/maps?q=${location.lat},${location.lon}`;
-            marker.bindPopup(`<b>${location.name}</b><br>Distance from Santiago: ${distance} km<br>${location.description}<br><a href='${whatsappLink}' target='_blank'>Share on WhatsApp</a>`);
+            var popupContent = `<b>${location.name}</b><br>Distance from Santiago: ${distance} km<br>
+                                <div class='popup-content' id='desc-${location.name.replace(/\s+/g, '')}'>
+                                    ${location.description}<br>
+                                    <a href='${whatsappLink}' target='_blank'>Share on WhatsApp</a>
+                                </div>
+                                <button onclick='toggleDescription("desc-${location.name.replace(/\s+/g, '')}")'>Show More</button>`;
+            marker.bindPopup(popupContent);
         });
+
+        function toggleDescription(id) {
+            var desc = document.getElementById(id);
+            if (desc.style.display === "none" || desc.style.display === "") {
+                desc.style.display = "block";
+            } else {
+                desc.style.display = "none";
+            }
+        }
     </script>
 </body>
 </html>
