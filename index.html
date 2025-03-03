@@ -11,9 +11,6 @@
             height: 500px;
             width: 100%;
         }
-        .popup-content {
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -41,33 +38,24 @@
         var santiago = { lat: -33.4489, lon: -70.6693 };
 
         var locations = [
-            { name: "Isla Chañaral", lat: -29.0236, lon: -71.5664, description: "Island eradicated of rabbits, one-day visit, travel in the morning and stay overnight in Coquimbo depending on weather. Visit the most iconic eradication site of IC, penguin watching, and possible sightings of marine mammals such as whales and dolphins." },
-            { name: "Isla Cachagua", lat: -32.5700, lon: -71.4633, description: "Island very close to the coast, still in the eradication process for 2025, delayed due to El Niño impact and avian influenza. One-day visit, accommodation in Santiago, morning visit and return in the afternoon. Humboldt penguin watching and community visits." },
-            { name: "Puerto Varas", lat: -41.3175, lon: -72.9850, description: "Multiple visits to tourist sites and project prospects in the area, meeting with part of the Chile team." },
+            { name: "Isla Chañaral", lat: -29.0236, lon: -71.5664, description: "Island eradicated of rabbits, iconic eradication site, penguin watching, possible sightings of whales and dolphins." },
+            { name: "Isla Cachagua", lat: -32.5700, lon: -71.4633, description: "Close to the coast, eradication in progress, Humboldt penguin watching, community visits." },
+            { name: "Puerto Varas", lat: -41.3175, lon: -72.9850, description: "Tourist site visits, project prospects, team meetings." },
             { name: "Juan Fernández Archipelago", lat: -33.6300, lon: -78.8300, description: "At least a 4-day trip, multiple projects, 2-hour flight by small plane." }
         ];
 
         locations.forEach(location => {
             var distance = calculateDistance(santiago.lat, santiago.lon, location.lat, location.lon);
             var marker = L.marker([location.lat, location.lon]).addTo(map);
-            var whatsappLink = `https://wa.me/?text=Location: ${location.name} - https://www.google.com/maps?q=${location.lat},${location.lon}`;
-            var popupContent = `<b>${location.name}</b><br>Distance from Santiago: ${distance} km<br>
-                                <div class='popup-content' id='desc-${location.name.replace(/\s+/g, '')}'>
-                                    ${location.description}<br>
-                                    <a href='${whatsappLink}' target='_blank'>Share on WhatsApp</a>
-                                </div>
-                                <button onclick='toggleDescription("desc-${location.name.replace(/\s+/g, '')}")'>Show More</button>`;
+            var googleMapsLink = `https://www.google.com/maps?q=${location.lat},${location.lon}`;
+            var whatsappLink = `https://wa.me/?text=Check this location: ${location.name} - ${googleMapsLink}`;
+            var popupContent = `<b>${location.name}</b><br>
+                                Distance from Santiago: ${distance} km<br>
+                                ${location.description}<br>
+                                <a href='${googleMapsLink}' target='_blank'>View on Google Maps</a><br>
+                                <a href='${whatsappLink}' target='_blank'>Share on WhatsApp</a>`;
             marker.bindPopup(popupContent);
         });
-
-        function toggleDescription(id) {
-            var desc = document.getElementById(id);
-            if (desc.style.display === "none" || desc.style.display === "") {
-                desc.style.display = "block";
-            } else {
-                desc.style.display = "none";
-            }
-        }
     </script>
 </body>
 </html>
